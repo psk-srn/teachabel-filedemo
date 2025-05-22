@@ -9,18 +9,16 @@
 <body>
   <h1>จำแนกรูปภาพด้วย Teachable Machine</h1>
 
-  <!-- 📥 ปุ่มให้อัปโหลดภาพ -->
+  <!-- ปุ่มอัปโหลดภาพ -->
   <input type="file" id="imageUpload" accept="image/*">
   <br><br>
 
-  <!-- 🖼 แสดงภาพที่อัปโหลด -->
-  <img id="uploadedImage" src="" width="224" height="224">
+  <!-- รูปภาพจะยังไม่แสดงตอนแรก -->
+  <img id="uploadedImage" width="224" height="224" style="display:none;">
   <div id="label-container"></div>
 
   <script>
-    // ❗ เปลี่ยนชื่อ URL ที่เคยชน → ใช้ชื่ออื่นแทน
     const MODEL_URL = "https://teachablemachine.withgoogle.com/models/_5zXUWw_x/";
-
     let model, labelContainer, maxPredictions;
 
     window.onload = async () => {
@@ -35,7 +33,6 @@
         labelContainer.appendChild(document.createElement("div"));
       }
 
-      // 📌 ตั้ง event เมื่อมีการอัปโหลดไฟล์
       document.getElementById("imageUpload").addEventListener("change", handleImageUpload);
     };
 
@@ -45,10 +42,10 @@
 
       const imgElement = document.getElementById("uploadedImage");
 
-      // ✅ ใช้ window.URL.createObjectURL อย่างถูกต้อง
+      // แสดงภาพ (เปิดให้โชว์)
+      imgElement.style.display = "block";
       imgElement.src = window.URL.createObjectURL(file);
 
-      // เมื่อโหลดภาพเสร็จ → ส่งให้โมเดลทำนาย
       imgElement.onload = async () => {
         const prediction = await model.predict(imgElement);
         for (let i = 0; i < maxPredictions; i++) {
