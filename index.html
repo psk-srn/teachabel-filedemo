@@ -3,30 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <title>Teachable Machine - Upload Image</title>
-  <!-- โหลด TensorFlow.js -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-  <!-- โหลด Teachable Machine Image -->
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.4/dist/teachablemachine-image.min.js"></script>
 </head>
 <body>
   <h1>จำแนกรูปภาพด้วย Teachable Machine</h1>
 
-  <!-- ปุ่มอัปโหลดไฟล์รูป -->
+  <!-- ✅ ปุ่มอัปโหลดรูป -->
   <input type="file" id="imageUpload" accept="image/*">
   <br><br>
 
-  <!-- แสดงรูปที่อัปโหลด -->
+  <!-- ✅ แสดงรูปที่เลือก -->
   <img id="uploadedImage" src="" width="224" height="224">
   <div id="label-container"></div>
 
   <script>
-    const URL = "https://teachablemachine.withgoogle.com/models/_5zXUWw_x/";
+    // ✅ เปลี่ยนชื่อตัวแปรโมเดลจาก URL → MODEL_URL เพื่อไม่ชนกับ window.URL
+    const MODEL_URL = "https://teachablemachine.withgoogle.com/models/_5zXUWw_x/";
     let model, labelContainer, maxPredictions;
 
-    // โหลดโมเดลทันทีเมื่อเว็บโหลดเสร็จ
+    // ✅ โหลดโมเดลเมื่อหน้าเว็บโหลด
     window.onload = async () => {
-      const modelURL = URL + "model.json";
-      const metadataURL = URL + "metadata.json";
+      const modelURL = MODEL_URL + "model.json";
+      const metadataURL = MODEL_URL + "metadata.json";
 
       model = await tmImage.load(modelURL, metadataURL);
       maxPredictions = model.getTotalClasses();
@@ -36,19 +35,21 @@
         labelContainer.appendChild(document.createElement("div"));
       }
 
-      // เมื่อมีการเลือกไฟล์ภาพ
+      // 📥 ฟังเมื่อผู้ใช้เลือกไฟล์
       document.getElementById("imageUpload").addEventListener("change", handleImageUpload);
     };
 
-    // ฟังก์ชันจัดการการอัปโหลดภาพ
+    // 📸 ฟังก์ชันเมื่ออัปโหลดรูปภาพ
     async function handleImageUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
 
       const imgElement = document.getElementById("uploadedImage");
-      imgElement.src = URL.createObjectURL(file);
 
-      // รอให้โหลดภาพเสร็จก่อนค่อยทำนาย
+      // ✅ สร้าง URL สำหรับแสดงภาพที่เลือก
+      imgElement.src = window.URL.createObjectURL(file);
+
+      // รอให้รูปโหลดเสร็จ แล้วค่อยทำนาย
       imgElement.onload = async () => {
         const prediction = await model.predict(imgElement);
         for (let i = 0; i < maxPredictions; i++) {
