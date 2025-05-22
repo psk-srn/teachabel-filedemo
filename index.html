@@ -9,20 +9,20 @@
 <body>
   <h1>จำแนกรูปภาพด้วย Teachable Machine</h1>
 
-  <!-- ✅ ปุ่มอัปโหลดรูป -->
+  <!-- 📥 ปุ่มให้อัปโหลดภาพ -->
   <input type="file" id="imageUpload" accept="image/*">
   <br><br>
 
-  <!-- ✅ แสดงรูปที่เลือก -->
+  <!-- 🖼 แสดงภาพที่อัปโหลด -->
   <img id="uploadedImage" src="" width="224" height="224">
   <div id="label-container"></div>
 
   <script>
-    // ✅ เปลี่ยนชื่อตัวแปรโมเดลจาก URL → MODEL_URL เพื่อไม่ชนกับ window.URL
+    // ❗ เปลี่ยนชื่อ URL ที่เคยชน → ใช้ชื่ออื่นแทน
     const MODEL_URL = "https://teachablemachine.withgoogle.com/models/_5zXUWw_x/";
+
     let model, labelContainer, maxPredictions;
 
-    // ✅ โหลดโมเดลเมื่อหน้าเว็บโหลด
     window.onload = async () => {
       const modelURL = MODEL_URL + "model.json";
       const metadataURL = MODEL_URL + "metadata.json";
@@ -35,21 +35,20 @@
         labelContainer.appendChild(document.createElement("div"));
       }
 
-      // 📥 ฟังเมื่อผู้ใช้เลือกไฟล์
+      // 📌 ตั้ง event เมื่อมีการอัปโหลดไฟล์
       document.getElementById("imageUpload").addEventListener("change", handleImageUpload);
     };
 
-    // 📸 ฟังก์ชันเมื่ออัปโหลดรูปภาพ
     async function handleImageUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
 
       const imgElement = document.getElementById("uploadedImage");
 
-      // ✅ สร้าง URL สำหรับแสดงภาพที่เลือก
+      // ✅ ใช้ window.URL.createObjectURL อย่างถูกต้อง
       imgElement.src = window.URL.createObjectURL(file);
 
-      // รอให้รูปโหลดเสร็จ แล้วค่อยทำนาย
+      // เมื่อโหลดภาพเสร็จ → ส่งให้โมเดลทำนาย
       imgElement.onload = async () => {
         const prediction = await model.predict(imgElement);
         for (let i = 0; i < maxPredictions; i++) {
